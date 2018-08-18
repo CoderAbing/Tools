@@ -170,4 +170,13 @@ public class NewsMode extends BaseMode {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "NewsMode{" +
+                "reason='" + reason + '\'' +
+                ", result=" + result +
+                ", error_code=" + error_code +
+                '}';
+    }
 }

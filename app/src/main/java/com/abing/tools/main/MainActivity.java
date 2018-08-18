@@ -8,9 +8,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
+import com.abing.tools.base.ARouterHelper;
 import com.abing.tools.base.BaseActivity;
 import com.abing.tools.R;
 import com.abing.tools.news.NewsActivity;
+import com.alibaba.android.arouter.facade.annotation.Route;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,7 +25,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
+@Route(path = MainActivity.ACTIVITY_PATH)
 public class MainActivity extends BaseActivity implements View.OnClickListener {
+    public static final String ACTIVITY_PATH = "/main/MainActivity";
 
     private Button btnStart, btnTime, btnNetwork;
     private TextView tvNetWork;
@@ -52,7 +56,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.button1:
                 button2();
             case R.id.button3:
-                startActivity(new Intent(this, NewsActivity.class));
+                //跳转到新闻界面
+                ARouterHelper.getInstence().build("/news/NewsActivity").navigation();
                 break;
         }
     }
@@ -108,4 +113,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        if (null != mDisposable && !mDisposable.isDisposed()) mDisposable.dispose();
+        super.onDestroy();
+    }
 }
