@@ -17,6 +17,9 @@ import com.alibaba.android.arouter.launcher.ARouter;
  */
 public class AppContext extends Application {
 
+    public final static String APP_KEY = "a8d4234a11ddf267c246781f1d1a193b";
+
+
     @Override
     public void onCreate() {
         super.onCreate();

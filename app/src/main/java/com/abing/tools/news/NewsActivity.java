@@ -7,8 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.abing.AppContext;
 import com.abing.tools.base.BaseActivity;
 import com.abing.tools.R;
+import com.abing.tools.base.HttpObserver;
 import com.abing.tools.http.RetrofitUtils;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.google.gson.Gson;
@@ -53,8 +55,7 @@ public class NewsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_activity);
         init();
-        onRequestNewsR();
-//        onRequestNews();
+        onRequestNewsRx();
     }
 
     private void init() {
@@ -66,61 +67,12 @@ public class NewsActivity extends BaseActivity {
     }
 
 
-//    @SuppressLint("CheckResult")
-//    private void onRequestNews() {
-//        Observable.create(new ObservableOnSubscribe<Response>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<Response> emitter) throws Exception {
-//                //开始网络请求
-//                Request request = new Request.Builder()
-//                        .get()
-//                        .url("http://v.juhe.cn/toutiao/index?type=keji&key=a8d4234a11ddf267c246781f1d1a193b")
-//                        .build();
-//                Call call = new OkHttpClient().newCall(request);
-//                Response response = call.execute();
-//                //请求结束发射请求结果
-//                emitter.onNext(response);
-//                Log.i("1------->", Thread.currentThread().getName());
-//            }
-//        }).subscribeOn(Schedulers.newThread())
-//                .map(new Function<Response, List<NewsMode.ResultBean.DataBean>>() {
-//                    @Override
-//                    public List<NewsMode.ResultBean.DataBean> apply(Response response) throws Exception {
-//                        Log.i("3------->", Thread.currentThread().getName());
-//
-//                        //提取结果转换成集合
-//                        if (null != response && response.isSuccessful()) {
-//                            NewsMode newsMode = new Gson().fromJson(response.body().string(), NewsMode.class);
-//                            if (null != newsMode) return newsMode.getResult().getData();
-//                        }
-//                        return null;
-//                    }
-//                }).observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<List<NewsMode.ResultBean.DataBean>>() {
-//                    @Override
-//                    public void accept(List<NewsMode.ResultBean.DataBean> dataBeans) {
-//                        Log.i("4------->", Thread.currentThread().getName());
-//
-//                        //加载数据到列表
-//                        if (null == dataBeans) return;
-//                        mAdapter.setNewData(dataBeans);
-//                    }
-//                })
-//        ;
-//    }
-
-
-    private void onRequestNewsR() {
+    private void onRequestNewsRx() {
         INewsRetrofit iNewsRetrofit = RetrofitUtils.getInstence().create(INewsRetrofit.class);
-        Observable<NewsMode> news = iNewsRetrofit.onRequestNews("keji", "a8d4234a11ddf267c246781f1d1a193b");
+        Observable<NewsMode> news = iNewsRetrofit.onRequestNews("keji", AppContext.APP_KEY);
         news.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<NewsMode>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                .subscribe(new HttpObserver<NewsMode>() {
                     @Override
                     public void onNext(NewsMode newsMode) {
                         Log.e("------>", newsMode.toString());
@@ -132,25 +84,7 @@ public class NewsActivity extends BaseActivity {
                         Log.e("------>", "Error");
                     }
 
-                    @Override
-                    public void onComplete() {
-
-                    }
                 });
-//        news.enqueue(new Callback<NewsMode>() {
-//            @Override
-//            public void onResponse(Call<NewsMode> call, retrofit2.Response<NewsMode> response) {
-//                Log.e("------>", response.body().toString());
-//                mAdapter.setNewData(response.body().getResult().getData());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<NewsMode> call, Throwable t) {
-//                Log.e("------>", "Error");
-//
-//            }
-//        });
-
     }
 
 }

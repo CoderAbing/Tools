@@ -11,5 +11,5 @@ import android.support.v7.app.AppCompatActivity;
  * @email Vincent_0728@outlook.com
  * @describe TODO:
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 }
